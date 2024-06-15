@@ -1,0 +1,7 @@
+1. Tutoriales en Coursera:
+Los Jupyter NoteBook se deben abrir desde Anaconda seleccionando el ambiente de Tutoriales
+El usuario y clave para conectarme a la DB es:
+user: Estudiante_1_202413     Passw: aabb1122
+
+IP de la BD: 157.253.236.120
+Puerto: 8080
