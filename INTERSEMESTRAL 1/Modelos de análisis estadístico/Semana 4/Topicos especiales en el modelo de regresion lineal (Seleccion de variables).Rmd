@@ -1,0 +1,251 @@
+---
+title: "Tópicos especiales en el modelo de regresión lineal"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+library(MASS)
+library(leaps)
+knitr::opts_chunk$set(echo = FALSE)
+datos <- as.data.frame(state.x77)
+datos <- rename(habitantes = Population, analfabetismo = Illiteracy,
+                ingresos = Income, esp_vida = `Life Exp`, asesinatos = Murder,
+                universitarios = `HS Grad`, heladas = Frost, area = Area,
+                .data = datos)
+datos <- mutate(.data = datos, densidad_pobl = habitantes * 1000 / area)
+modelo<-lm(esp_vida~.,data=datos)
+```
+
+
+## Introducción
+
+El presente tutorial le permitirá poner en práctica el tema visto en la semana (*tópicos especiales en el modelo de regresión lineal*) y le dará las herramientas para realizarlo utilizando R, de forma que estará en capacidad de:
+
+- Identificar algunos criterios de calidad para evaluar la bondad de ajuste de un modelo.
+
+- Implementar procedimientos de selección de variables para escoger el mejor modelo.
+
+Encontrará explicaciones del procedimiento y la implementación en R junto con ejemplos interactivos en los que podrá ejecutar directamente fragmentos de código y observar el resultado. Al final encontrará una sección con ejercicios para que pueda practicar lo aprendido con una nueva base de datos.
+
+Se utilizarán las siguientes librerías 
+
+```{r librer, exercise=TRUE, exercise.lines = 5}
+library(ggplot2)
+library(MASS)
+library(leaps)
+```
+
+### Datos
+
+En este tutorial se utilizará la base de datos *state.x77* que cuenta con información de 50 estados de USA con las siguientes variables:
+
+- habitantes: estimación de población al 1 de julio de 1975
+
+- ingresos:renta per cápita (1974)
+
+- analfabetismo: analfabetismo (1970, porcentaje de la población)
+
+- esp_vida: esperanza de vida en años (1969-1971)
+
+- asesinatos: tasa de homicidio y homicidio no negligente por 100.000 habitantes (1976)
+
+- universitarios: porcentaje de graduados de secundaria (1970)
+
+- heladas: número medio de días con temperatura mínima por debajo del punto de congelación (1931-1960) en la capital o gran ciudad
+
+- area: área de tierra en millas cuadradas
+
+## Criterios de calidad
+
+Criterios como el $R^2$ o el RMSE son ampliamente utilizados para evaluar la bondad de ajuste de un modelo. Al  utilizar estos criterios, para decidir entre dos modelos, se escogerá aquel que tenga el valor más grande. Sin embargo, estos criterios no son idóneos al momento de seleccionar las variables pues tienen un defecto, al agregar variables predictoras el criterio nunca va a empeorar.
+
+Interpretar un modelo con un alto número de variables es difícil, por lo que puede ser de interés tener un modelo más pequeño. Para esto al seleccionar las variables que se van a incluir es necesario considerar criterios de calidad que tengan en cuenta el tamaño del modelo. 
+
+### Criterio de información de Akaike (AIC)
+
+Es una medida de la calidad del modelo que se define como:
+
+$AIC = nln(SC(Residuos)/n)+2k$
+
+donde $k$ representa el número de variables incluidas en el modelo. Al comparar modelos usando el AIC se elegirá el de menor valor. Para calcularlo en R se puede utilizar la función `AIC` que recibe como argumento el modelo a evaluar:
+
+```{r aic, exercise=TRUE}
+AIC(modelo)
+```
+
+### Criterio de información Bayesiano (BIC)
+
+Es una medida similar al AIC, pero tiene una penalización mayor sobre el número de variables incluidas en el modelo. Se define como:
+
+$BIC = nln(SC(Residuos)/n)+ln(n)k$
+
+Al igual que ocurre con el AIC se prefiere el modelo que tenga el menor BIC. Para calcularlo en R se puede utilizar la función `BIC` que recibe como argumento el modelo a evaluar:
+
+```{r bic, exercise=TRUE}
+BIC(modelo)
+```
+
+### R cuadrado ajustado
+
+Es una medida de la calidad del modelo que penaliza el $R^2$ según el número de variables incluidas en el modelo:
+
+$R^2_{ajustado}=1-\frac{(n-1)}{(n-k-1)}(1-R^2)$
+
+El valor del $R^2$ ajustado de un modelo se puede obtener de la siguiente forma:
+
+```{r rajus, exercise=TRUE}
+summary(modelo)$adj.r.squared
+```
+
+## Procedimientos de selección
+
+Ya contamos con los criterios para comparar dos modelos, pero observar el resultado de dichos criterios para todas las combinaciones posibles de variables puede ser muy ineficiente. Por ejemplo, si tenemos 8 variables el número de modelos que podríamos construir sin tener en cuenta interacciones y términos polinomiales es de 256. Para esto utilizaremos algoritmos de búsqueda:
+
+### Eliminación hacia atrás
+
+Este procedimiento parte del modelo que incluye todas las variables disponibles, después determina cómo eliminar una sola variable de acuerdo con un criterio determinado. Existen diferentes funciones que se pueden utilizar para este propósito, una de ellas es la función `stepAIC` de la librería `MASS` que como su nombre lo indica utiliza el criterio de información de Akaike para seleccionar el mejor modelo. La función recibe el modelo completo, la dirección en que se realizará la selección de variables (hacia atrás en este caso) y el argumento `trace`que de ser `TRUE` mostrará la información de los modelos evaluados, de lo contrario solo muestra el mejor modelo.
+
+```{r back, exercise=TRUE}
+step.model <- stepAIC(modelo, direction = "backward", 
+                      trace = FALSE)
+summary(step.model)
+```
+
+### Eliminación hacia adelante
+
+Este procedimiento parte de un modelo sin incluir ninguna variable, después determina cómo agregar una variable a la vez. Existen diferentes funciones que se pueden utilizar para este propósito, una de ellas es la función `regsubsets` de la librería `leaps`. La función recibe la formula del modelo completo, un dataframe con los datos, el número máximo de modelos a examinar y el método a utilizar (hacia adelante en este caso). La función `summary` al utilizarse con un objeto `regsubset` representa las variables agregadas en cada paso con un asterisco:
+
+```{r forw, exercise=TRUE}
+models <- regsubsets(esp_vida~., data = datos, nvmax = 8,
+                     method = "forward")
+summary(models)
+```
+
+Con esta información se puede proceder a seleccionar el mejor modelo utilizando un criterio determinado. Para esto el resultado de summary nos permite comparar los resultados, en este caso utilizaremos el BIC por lo que seleccionaremos la combinación en la que este valor es mínimo:
+
+```{r forw2, exercise=TRUE}
+models <- regsubsets(esp_vida~., data = datos, nvmax = 8,
+                     method = "forward")
+sumreg<-summary(models)
+
+## determinar el máximo
+which.min(sumreg$bic)
+plot(sumreg$bic,type = "l",ylab = "BIC")
+points(4,sumreg$bic[4],pch=19,col='red')
+
+# Observar las variables seleccionadas
+coef(models,4)
+```
+
+
+### Eliminación exhaustiva 
+
+Por último, la búsqueda exhaustiva compara todas las combinaciones posibles por lo que puede requerir una gran capacidad para utilizarla. La función `regsubsets` se puede utilizar para este algoritmo al cambiar el argumento `method`:
+ 
+```{r exhau, exercise=TRUE}
+models <- regsubsets(esp_vida~., data = datos, nvmax = 8,
+                     method = "exhaustive")
+sumreg<-summary(models)
+
+## determinar el máximo
+which.max(sumreg$adjr2)
+plot(sumreg$adjr2,type = "l",ylab = "R^2 ajustado")
+points(5,sumreg$adjr2[5],pch=19,col='red')
+
+# Observar las variables seleccionadas
+coef(models,5)
+```
+
+Para seleccionar el mejor modelo, en este caso, se utilizó el $R^2$ ajustado por lo que se busca el valor máximo que corresponde al modelo con 5 coeficientes.
+
+## Ejercicios
+
+En esta sección se utilizará la base de datos *UScrime* de la librería *MASS* con la que se explicar la tasa de delitos (Y) a partir de un grupo de variables. La base de datos contiene la siguiente información:
+
+- M percentage of males aged 14–24.
+
+- So indicator variable for a Southern state.
+
+- Ed mean years of schooling.
+
+- Po1 police expenditure in 1960.
+
+- Po2 police expenditure in 1959.
+
+- LF labour force participation rate.
+
+- M.F number of males per 1000 females.
+
+- Pop state population.
+
+- NW number of non-whites per 1000 people.
+
+- U1 unemployment rate of urban males 14–24.
+
+- U2 unemployment rate of urban males 35–39.
+
+- GDP gross domestic product per head.
+
+- Ineq income inequality.
+
+- Prob probability of imprisonment.
+
+- Time average time served in state prisons.
+
+- y rate of crimes in a particular category per head of population
+
+Utilice el siguiente espacio para obtener la información que necesita para responder a las preguntas que encuentra más adelante: 
+
+```{r add-function1, exercise=TRUE, exercise.lines = 5}
+lm(y~.,UScrime)
+```
+
+```{r quiza}
+quiz(caption = "Preguntas",question("¿Cuál es el coeficiente de determinación del modelo completo`?",
+    answer("0.707"),
+    answer("0.803", correct = TRUE),
+    answer("0.187")
+  ),
+  question("¿Cuál es el valor del AIC del modelo completo?",
+    answer("681.48"),
+    answer("650.029", correct = TRUE),
+    answer("209.1")
+  )
+  )
+      
+```
+
+
+Modifique el siguiente código para utilizar el algoritmo de eliminación exhaustiva y resolver la pregunta que encontrará a continuación:
+
+```{r add-function, exercise=TRUE}
+#regsubsets("", data = "-", nvmax = "-", method = "-----")
+```
+
+De acuerdo con el resultado obtenido en el ejercicio anterior:
+
+```{r quiz}
+quiz(
+    caption = "Preguntas",  question("¿Cuántos coeficientes se deben seleccionar si se utiliza el criterio del BIC?",
+    answer("8"),
+    answer("6", correct = TRUE),
+    answer("5")
+  )
+)
+```
+
+
+## Referencias
+
+Ott, L. and Longnecker, M., 2015. An introduction to statistical methods & data analysis. 7th ed. Boston, MA: Cengage Learning.
+
+Introducción a la Regresión Lineal Múltiple by Joaquín Amat Rodrigo, available under a Attribution 4.0 International (CC BY 4.0) at https://www.cienciadedatos.net/documentos/25_regresion_lineal_multiple
+
+Venables WN, Ripley BD (2002). Modern Applied Statistics with S, Fourth edition. Springer, New York. ISBN 0-387-95457-0, https://www.stats.ox.ac.uk/pub/MASS4/.
+
+Lumley, T., 2020. Regression Subset Selection. Cran.r-project.org. Available at: https://cran.r-project.org/web/packages/leaps/leaps.pdf
+
+Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4, https://ggplot2.tidyverse.org.
