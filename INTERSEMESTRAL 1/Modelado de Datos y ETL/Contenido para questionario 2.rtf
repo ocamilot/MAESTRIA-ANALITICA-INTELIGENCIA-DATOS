@@ -1,0 +1,640 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 No me respondas nada aun, solo quiero que tomes esta informacion y mas adelante te hare preguntas sobre ella:\
+Modelado de dimensiones y recomendaciones de calidad de los modelos\
+Interactive Transcript - Enable basic transcript mode by pressing the escape key\
+You may navigate through the transcript using tab. To save a note for a section of text press \uc0\u8984  + S. To expand your selection you may use \u8984  + arrow key. You may contract your selection using shift + \u8984  + arrow key. For screen readers that are incompatible with using arrow keys for shortcuts, you can replace them with the H J K L keys. Some screen readers may require using \u8984  in conjunction with the alt key\
+Play video starting at ::9 and follow transcript0:09\
+Hola, nuevamente. En este video voy a hablarles de la forma de modelar dimensiones y los elementos que debemos tener presentes para garantizar cierto nivel de calidad del modelo propuesto. Esto es importante para terminar de afinar la competencia de modelar dimensionalmente y poder utilizarlo en contextos de organizaciones. Recordemos que estamos trabajando en el \'e1rea de almacenamiento de datos para realizar an\'e1lisis, el cual, en esta aproximaci\'f3n, corresponde a tener un modelo dimensional que ser\'e1 luego implementado en una base de datos relacional, a lo cual denominamos ROLAP. Hasta este punto, hemos hablado de una serie de criterios que caracterizan los modelos dimensionales y que permiten validar su calidad, es as\'ed como el modelo debe tener al menos una tabla central, denominada tabla de hechos que representa un proceso de negocio. Adicionalmente, siempre debemos hablar de una dimensi\'f3n fecha, que recordemos que en los an\'e1lisis nos interesa lo que ha pasado a lo largo del tiempo y no solo un punto en el tiempo. El tipo de relaciones entre las dimensiones y la tabla de hechos, es 1-m; un cliente hace varias compras y una compra est\'e1 relacionada con un \'fanico cliente. Las dimensiones que observamos son perspectivas de an\'e1lisis que usamos como filtro en el momento de hacer consultas, por ejemplo, compras de la categor\'eda de electrodom\'e9sticos, entre el 1 de enero del 2022 y el 31 de marzo del 2022. Los atributos de las dimensiones son caracter\'edsticas propias de la dimensi\'f3n, como lo es el nombre, la categor\'eda o subcategor\'eda, para el caso de producto. No dependen de otras dimensiones adicionales al tiempo. Ahora, abordemos el tema de c\'f3mo modelar una dimensi\'f3n. Algunos ejemplos de los cl\'e1sicos de dimensiones son "cliente", que en otros contextos puede ser el estudiante, el proveedor o el paciente, la geograf\'eda que puede representar la ubicaci\'f3n del cliente o de una sucursal, el producto o servicio que corresponde a la oferta realizada por una empresa a un cliente. Estas dimensiones deben tener una llave primaria independiente del sistema transaccional, vemos que sobre esta llave queremos control total y no es posible si dependemos de la llave del sistema OLTP, adem\'e1s hay varias formas de manejar la historia de los atributos de las dimensiones, en las cuales no es posible utilizar la llave del OLTP, ya que se tiene m\'e1s de una fila representando la misma dimensi\'f3n. Esto \'faltimo lo entenderemos mejor en el recurso de historia de atributos de una dimensi\'f3n. Otros atributos comunes son los que vienen de las banderas o los indicadores, en este caso particular, de la dimensi\'f3n "fecha", observamos los dos \'faltimos y hablamos de "festivo" y "d\'eda de la semana". Entonces, f\'edjense que para una fecha en particular, como 6 de Julio, se podr\'eda decir que no es festivo, mientras que para el 1 de mayo si es festivo. Adem\'e1s, puedo entender por ejemplo, si el 1 de mayo fue un d\'eda en la semana o de fin de semana, para un a\'f1o particular en el cual ocurrieron cierto n\'famero de ventas. Vemos que tambi\'e9n podemos tener m\'faltiples campos de texto, en este ejemplo tenemos la descripci\'f3n de la fecha, el nombre, el mes fiscal, el d\'eda de la semana, o como lo ve\'edamos antes, el saber si una fecha es o no un d\'eda festivo. Tambi\'e9n pueden convivir m\'faltiples jerarqu\'edas; en nuestro ejemplo vemos en azul la jerarqu\'eda de fecha calendario y en morado la jerarqu\'eda de fecha asociada al a\'f1o fiscal de la organizaci\'f3n. Revisemos el concepto de jerarqu\'eda para que todos tengamos el mismo lenguaje y recordemos que una jerarqu\'eda es una relaci\'f3n de uno a muchos al interior de los atributos de una dimensi\'f3n, es as\'ed como en nuestro ejemplo podemos observar que varios d\'edas de la semana conforman un mes, varios meses, un trimestre y cuatro trimestres un a\'f1o. Ah\'ed estamos mostrando esa relaci\'f3n de uno a muchos, un d\'eda pertenece a un \'fanico mes calendario, pero un mes tiene m\'faltiples d\'edas de la semana asociados. Este concepto de jerarqu\'eda puede ser com\'fan en algunas de las dimensiones, en particular aplica para el caso de la dimensi\'f3n geograf\'eda, \'bfya sabes cu\'e1l es? Adicionalmente, relacionado con el tema de jerarqu\'edas, es posible que est\'e9s pensando en por qu\'e9 todo est\'e1 en la misma tabla de la dimensi\'f3n fecha y por qu\'e9 no m\'e1s bien tener tres tablas; una de d\'edas, otra de meses y otra de a\'f1os en un estilo normalizado, lo que denominamos "Snow Flake" o copo de nieve. En la parte de anal\'edtica se recomienda evitar la normalizaci\'f3n, principalmente porque puede ser tedioso el cargue y, en general, el manejo puede ser m\'e1s confuso en el momento de hacer consultas y en la actualidad, aunque la cantidad de almacenamiento es importante, no es grave manejar este tipo de recalificaci\'f3n controlada al interior de una dimensi\'f3n, es por eso que lo m\'e1s simple y sencillo es tener toda esa informaci\'f3n en la misma dimensi\'f3n. Pasemos ahora a la dimensi\'f3n "producto" y veamos que a diferencia de la dimensi\'f3n "fecha", tenemos una llave subrogada que corresponde a un n\'famero consecutivo creado para identificar de forma \'fanica un registro de la dimensi\'f3n. Sin embargo, para mantener la relaci\'f3n con el sistema OLTP, incluimos adicionalmente como atributo la llave natural, que en este caso del producto es el SKU. Adem\'e1s, igual que en la dimensi\'f3n fecha, identificamos varios tipos de texto, nombre, color, categor\'eda, entre otros. Otra de las recomendaciones es, por ejemplo, incluir columnas adicionales si la llave natural u otras columnas de la fuente de datos tienen sem\'e1ntica. En este caso, vemos que el SKU tiene una sem\'e1ntica, en la cual lo primero que viene es la subcategor\'eda del producto, que en este caso es deportiva, dado que nuestro ejemplo es de ropa y lo manejamos con una columna especial de subcategor\'eda. El segundo elemento que debemos representar es el concepto de medias tobilleras, en el cual queda el nombre del producto. El tercero es el color blanco y, por \'faltimo, la talla que representa personas que calzan 40. F\'edjate que todos esos elementos los podemos extraer y crear nuevas columnas independientes para manejarlos en los an\'e1lisis, es por eso que a nivel anal\'edtico, tendremos una nueva columna por cada concepto, porque en este caso es de inter\'e9s incluirlas en an\'e1lisis. Finalmente, y no menos importante, es el hecho de que debemos evitar atributos sin valor, recordemos que es m\'e1s complejo a nivel de consultas SQL. Siempre se debe diferenciar entre si hay valor o no, con el operador IS NULL y recordemos que estos modelos se caracterizan por su simplicidad para entenderlo y consultarlo. As\'ed que aqu\'ed, es preferible colocar un "no aplica" o "sin valor" para atributos, y, en caso de ser necesario, crear, por ejemplo, un producto no identificado para casos con ventas sobre c\'f3digos de productos que no logramos saber cu\'e1l es. En este contexto, es preferible manejarlo as\'ed y evitar a toda costa el tener valores nuevos. Con esto terminamos las ideas generales que debemos tener presentes en el modelado de las dimensiones y espero que, a pesar de que lo que hice aqu\'ed fue aplicarlo \'fanicamente para "fecha" y "producto", puedas generalizar. En particular, te invito a pensar en la dimensi\'f3n "cliente", que es un caso cl\'e1sico en modelos multidimensionales. Hablemos ahora de calidad de modelos y c\'f3mo podemos validarla para mejorarla si es necesario. Recordemos que hay una serie de preguntas que nos ayudan a determinar la calidad de un modelo; esas preguntas van desde saber si una dimensi\'f3n en realidad es una dimensi\'f3n o una medida, hasta encontrar inconsistencias a nivel de detalle, cuando tenemos ciertas dimensiones y observamos que algunas medidas no coinciden con esas dimensiones. Ahora quiero incluir nuevas preguntas que van a complementar nuestro proceso de validar la calidad de un modelo. Empecemos desde la pregunta m\'e1s simple, \'bfhay una tabla central? F\'edjate que debe existir al menos una, que es la llamada tabla de hechos, la cual relaciona las diferentes dimensiones con la informaci\'f3n de las medidas y representa un proceso de negocio. Otro ejemplo clave es la existencia de la dimensi\'f3n "fecha"; siempre debe existir dado que, en la parte anal\'edtica, lo que queremos hacer es an\'e1lisis de qu\'e9 ha pasado, para lo cual necesitamos una trayectoria o una historia. Esta dimensi\'f3n "fecha" est\'e1 conectada \'fanicamente con las tablas de "hechos", porque recuerda la estructura y toda la informaci\'f3n que tiene dicha dimensi\'f3n, lo ve\'edamos previamente; informaci\'f3n de d\'edas de la semana, si es festivo o no y esto es \'fatil cuando queremos hacer an\'e1lisis sobre los hechos. Por ejemplo, en este caso, si quieres saber si los d\'edas que se compra m\'e1s son d\'edas de semana o fines de semana o, por ejemplo, si son festivos o no o si son los lunes, los martes, etc\'e9tera. Esta sem\'e1ntica no la requerimos si tenemos fechas como atributos de las dimensiones. Imag\'ednate que tenemos la fecha de nacimiento de un cliente, \'bfcrees que tenemos que saber qu\'e9 d\'eda naci\'f3 el cliente? \'bfSer\'e1 que naci\'f3 un fin de semana o en primer trimestre del a\'f1o? Para el contexto particular de un "retail" no importa y, en t\'e9rminos generales, no se requiere; es as\'ed como las atributos de las dimensiones ser\'e1n de tipo "Date" y no debe existir una relaci\'f3n entre ellos y la dimensi\'f3n fecha. Otra pregunta fundamental es ver si toda la tabla de hechos tiene al menos una medida. Siempre debe tener al menos una y hay casos que denominamos tablas de hechos Factless, porque el proceso para este nivel de granularidad no tiene medidas. Sin embargo, a pesar de ello, nos inventamos una columna que tenga un valor constante para todas las filas y juegue el rol de medida. Esto lo veremos en otro recurso, pero siempre necesitamos tener medidas y esas medidas son n\'fameros sobre las cuales podemos hacer operaciones como sumar y que son medidas aditivas o podemos traer el m\'ednimo o el m\'e1ximo valor, hacer promedio, entre otras operaciones. Otra pregunta es la relacionada con los atributos multivalor, \'bfes permitido en estos modelos tener atributos multivalor? Multivalor es tener, por ejemplo, listas como de servicios, productos de clientes en un solo atributo. La respuesta es: todo atributo que tengamos en este modelo va a ser monovalor, porque nos interesa su an\'e1lisis y poderlo consultar de forma simple. Por \'faltimo, tenemos una \'f1apa que es, \'bfhay relaci\'f3n directa por medio de las llaves for\'e1neas entre las tablas de hecho? Lo que quiere decir es que las tablas de hecho tendr\'edan una llave primaria y podr\'edan tener llaves for\'e1neas entre ellas. En este nivel de modelado y, por razones pedag\'f3gicas, es preferible pensar que no, lo que significa que la tabla de hechos no tiene llave primaria, a pesar de que para efectos de carga de datos y facilidad en proceso puede existir entre otras razones. Solo llaves for\'e1neas de dimensiones y medidas vamos a manejar ac\'e1. De esta forma, cuando estamos modelando es preferible no manejar la llave primaria para evitar esa tentaci\'f3n de conectar las tablas de hechos directamente entre ellas y no por medio de las dimensiones, que es como debe realizarse. Llegamos al final y es importante recordar que en este video hablamos de la forma de modelar dimensi\'f3n, ejemplificando el caso de la dimensi\'f3n de fecha, que es especial, y la de producto. Adicionalmente, vimos algunas preguntas para validar la calidad del modelo. Espero que estos puntos puedan ayudarte a fortalecer la competencia de modelar multidimensionalmente, validar la calidad de los modelos y tener como resultado mejores modelos. Hasta pronto.\
+\
+omentarios generales\
+Adaptaci\'f3n realizada por Mar\'eda del Pilar Villamil, del cap\'edtulo Cap\'edtulo 5 \'93Procurement\'94 de la referencia [1], disponible en versi\'f3n digital en la \
+biblioteca de la universidad (biblioteca.uniandes.edu.co). \
+Con el fin de resolver dudas que puedan quedar con esta lectura, puedes profundizar los conceptos vistos en esta lectura en la referencia [1]. \
+En particular: \
+\uc0\u61623  Tipos manejo de historia en dimensiones: \'93Slowly Changing Dimension Basics\'94 que est\'e1 organizado en los tipos individuales en las \
+p\'e1ginas 148- 159 \
+\uc0\u61623  Combinaci\'f3n de tipos de manejo de historia: \'93Hybrid Slowly Changing Dimension Techniques\'94 p\'e1ginas 159 \'96 165.\
+II. Detalle de la lectura\
+Hasta este punto hemos trabajado pensando en que la informaci\'f3n que cambia a lo largo del tiempo y que es de inter\'e9s para ser analizada, \
+est\'e1 siempre almacenada en una tabla de hechos.\
+Sin embargo, esto es una simplificaci\'f3n de la realidad. En muchas ocasiones queremos hacer an\'e1lisis sobre las dimensiones y saber la versi\'f3n \
+exacta de la dimensi\'f3n en el momento de la ocurrencia del hecho o en distintos momentos a lo largo del tiempo. Uno de los ejemplos cl\'e1sicos \
+est\'e1 relacionado con la dimensi\'f3n cliente. El comportamiento del cliente var\'eda a lo largo del tiempo. No es lo mismo cuando hablamos de un \
+cliente en su \'e9poca de estudiante universitario, que cuando est\'e1 pensionado. Esa informaci\'f3n es fundamental para las organizaciones, ya que \
+les permite comprender el comportamiento de un cliente en un momento de su vida para, por ejemplo, personalizar las ofertas que le hace y \
+de esta manera aumentar la probabilidad de una respuesta positiva.\
+Es as\'ed, como se han propuesto diferentes formas de manejar dicha historia y vamos a revisar en detalle cada una de ellas. Estas formas se \
+Modelado de datos y ETL\
+3\
+conocen con los nombres de tipos para el manejo de cambios lentos de una dimensi\'f3n (Slowly Changing Dimension Types), van desde el tipo \
+2 hasta tipo 7, y corresponden a propuestas realizadas por el grupo Kimball [1]. Aunque no todos los tipos son utilizados con la misma \
+frecuencia, el conocerlos puede dar pautas para modelar datos siendo conscientes de la flexibilidad, eficiencia entre otros criterios.\
+Se preguntar\'e1n \'bfqu\'e9 pas\'f3 con los tipos 0 y 1? En el tipo 0 la decisi\'f3n es que los atributos no cambian, as\'ed que no se lleva historia. Mientras que \
+en el tipo 1 la decisi\'f3n es que, aunque cambie el atributo, no es importante para el negocio llevar la historia. Este es el caso de cambio de \
+nombre de un cliente. F\'edjense que puede cambiar, sin embargo, la empresa decide sobrescribir el nombre del cliente y no llevar historia del \
+cambio.\
+A continuaci\'f3n, como se muestra en la tabla cliente (Dimensi\'f3n), se trabaja con el ejemplo de la dimensi\'f3n cliente que representa una \
+dimensi\'f3n con su identificador para el repositorio anal\'edtico, tipo de identificaci\'f3n, n\'famero de identificaci\'f3n, nombre y la \'faltima versi\'f3n de la \
+categor\'eda del cliente, sus ingresos y estado civil. Sin embargo, la empresa tiene la intenci\'f3n de manejar historia de su categor\'eda, ingresos y \
+estado civil. Es as\'ed como para ilustrar las caracter\'edsticas de los tipos del 2 al 7 se toma como ejemplo, la cliente Mar\'eda Castillo con dos versiones\
+espec\'edficas: \
+\uc0\u61623  Versi\'f3n1: Categor\'eda novato, con ingresos de 5\'92 (cinco millones), estado civil casado. Versi\'f3n v\'e1lida desde su afiliaci\'f3n 15-01-2007 hasta \
+el 28-06-2017.\
+\uc0\u61623  Versi\'f3n2: Categor\'eda VIP, con ingresos de 10\'92 (diez millones), estado civil casado, a partir del 29-06-2017.\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'eda(*) Ingresos(*) EstadoCivil(*)\
+PK NN NN NN\
+11 TI 124567 Maria Castillo VIP 10\'92 Casado\
+24 CC 456789 Juan Perez Novato 5\'92 Soltero\
+Cliente (Dimensi\'f3n)\
+Modelado de datos y ETL\
+4\
+Tipo 2: Basada en la creaci\'f3n de nuevas filas\
+La idea detr\'e1s de este manejo es crear una nueva fila que represente una nueva versi\'f3n de la dimensi\'f3n a la cual se le lleva historia. Esta es la \
+estrategia m\'e1s sencilla y com\'fan en los modelos dimensionales. Sin embargo, puede llevar a tener un gran n\'famero de filas en una dimensi\'f3n. \
+Por lo tanto, es importante tener presente posibles problemas de desempe\'f1o para la carga de datos en estas dimensiones y en las consultas \
+sobre ellas. Estos puntos deber\'e1n ser analizados para tener certeza de que esta es la mejor alternativa para el manejo de historia en la \
+dimensi\'f3n que est\'e1n analizando.\
+El manejo de la historia implica la creaci\'f3n de nuevas columnas que representan las fechas en las cuales estuvo vigente la versi\'f3n representada \
+por la fila. En el ejemplo, las vemos representadas por las columnas fechaVigenciaInicial (FeVigIni), y la fechaVigenciaFinal (FeVigFin). \
+Adicionalmente, para encontrar f\'e1cilmente la versi\'f3n actual de la dimensi\'f3n, se crea la columna Actual (A) que es una bandera con valores \
+de \'91S\'92 (Si) o \'91N\'92(No). Con respecto a estas columnas y como una regla de los modelos dimensionales, en t\'e9rminos generales, no se permiten \
+celdas con valores nulos, ya que estos valores implican sentencias de consulta m\'e1s complejas que afectan el tiempo para su desarrollo, \
+mantenimiento y eficiencia en su ejecuci\'f3n. Es por ello, que se prefiere, por ejemplo, para el caso de la fecha de vigencia final, crear un valor \
+en el futuro (i.e., 01-01-5000).\
+F\'edjense como comparado con la tabla de Cliente original, tenemos dos filas para representar a Mar\'eda Castillo y las tres nuevas columnas al \
+final de la tabla. En este punto, es el momento de entender mejor la necesidad de tener llaves subrogadas. Como ven, la llave del sistema \
+transaccional que en este caso es el tipo de identificaci\'f3n y el n\'famero de identificaci\'f3n, no nos sirve como llave de la dimensi\'f3n, ya que \
+debemos crear nuevas filas para representar las distintas versiones del cliente. Es as\'ed como se propone crear una nueva llave propia del sistema \
+anal\'edtico que sea sencilla, la cual se denomina llave subrogada y corresponde a un n\'famero secuencial. Esta llave es la que se relaciona con la \
+tabla de hechos y en este ejemplo, corresponde a la columna IdCliente.\
+Modelado de datos y ETL\
+5\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'eda(*) Ingresos(*) EstadoCivil(*) FeVigIni FeVigFin A\
+PK NN NN NN NN NN NN\
+11 TI 124567 Maria Castillo Novato 5\'92 Casado 15-01-2007 28-06-2017 N\
+25 TI 124567 Maria Castillo VIP 10\'92 Casado 29-06-2017 01-01-5000 S\
+24 CC 456789 Juan Perez Novato 3\'92 Soltero 02-02-2021 01-01-5000 S\
+Tipo 3: Basada en la creaci\'f3n de nuevas columnas\
+El tipo 3 est\'e1 basado en mantener como n\'famero de filas de una dimensi\'f3n, las instancias propias de la dimensi\'f3n. Lo que en este caso \
+corresponde a tener tantas filas, como clientes tiene la empresa y, crear todo el manejo de historia como nuevas columnas con los valores \
+hist\'f3ricos. Es as\'ed, como debemos conocer el n\'famero de cambios que queremos mantener, con el fin de crear ese n\'famero de columnas \
+asociadas al atributo al que se le quiere llevar la historia. Para efectos del ejemplo, vamos a suponer que queremos manejar dos cambios de \
+los atributos categor\'eda e ingreso. Es por esta raz\'f3n, que en la tabla de cliente-tipo3 vemos asociados a estos atributos dos columnas: \
+CategoriaActl y CategoriaAnt, las cuales representan respectivamente la categor\'eda actual y la anterior. De igual manera, para la columna \
+ingresos, creamos las columnas IngresosActl e IngresosAnt, siguiendo la misma l\'f3gica que para el atributo categor\'eda. Como observamos en \
+el ejemplo, el n\'famero de filas se conserva igual que en el caso donde se manejaban los valores actuales del cliente y no se ten\'eda historia. Este \
+tipo 3 es poco frecuente en modelos multidimensionales. Sin embargo, su potencial est\'e1 en combinarlo con otros tipos, como por ejemplo, \
+el tipo 2.\
+Cliente-tipo2 (Dimensi\'f3n)\
+Modelado de datos y ETL\
+6\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'edaAnt CategoriaActl IngresosAntIngresosActlEstadoCivil(*)\
+PK NN NN NN\
+11 TI 124567 Maria Castillo Novato 1 (VIP) 5\'92 10\'92 Casado\
+24 CC 456789 Juan Perez Novato 2 (Novato)3\'92 3\'92 Soltero\
+Tipo 4: Basada en la creaci\'f3n de nuevas tablas\
+En el tipo 4, los supuestos que se tienen son que el n\'famero de cambios de un atributo es variable y desconocido y el tama\'f1o de la dimensi\'f3n \
+sin historia, supera el mill\'f3n de registros, as\'ed que crear nuevas filas y tener la opci\'f3n tipo 2 puede resultar costoso en almacenamiento y llevar \
+a ineficiencias en el momento de consultar la informaci\'f3n. La propuesta entonces es tomar un subconjunto de columnas de la dimensi\'f3n \
+original y crear una nueva tabla con dichas columnas, la cual denominamos minidimensi\'f3n. Las columnas a seleccionar para crear la nueva \
+tabla, son columnas que cambian frecuentemente y t\'edpicamente en el mismo momento. En este caso vamos a crear una minidimensi\'f3n \
+denominada PerfilCliente como se muestra en la tabla Cliente-tipo4.\
+Cliente-tipo3 (Dimensi\'f3n)\
+Modelado de datos y ETL\
+7\
+IdMini Categor\'eda RangoIngresos EstadoCivil\
+PK NN NN NN\
+1 Novato 2\'92-5\'92 Casado\
+2 VIP 5\'92-12\'92 Casado\
+3 Novato 2\'92-5\'92 Soltero\
+IdCliente TipoIdentificacion NumIdentificacion Nombre\
+PK NN NN NN\
+11 TI 124567 Maria Castillo\
+24 CC 456789 Juan Perez\
+Fij\'e9monos como en la minidimensi\'f3n PerfilCliente, no est\'e1 la identificaci\'f3n del cliente. \'danicamente valores de las columnas que cambian en \
+el tiempo y descritas en rangos. Esto se hace para aumentar la probabilidad de compartir una fila por varios clientes, en nuestro ejemplo y,\
+de reducir el n\'famero de filas de dicha tabla. Lo que se espera es que esa tabla tenga menos registros que el n\'famero de instancias de la \
+dimensi\'f3n de la cual se origin\'f3 la minidimensi\'f3n.\
+PerfilCliente (Minidimensi\'f3n)\
+Cliente-tipo4 (Dimensi\'f3n)\
+Modelado de datos y ETL\
+8\
+La pregunta que surge es \'bfen qu\'e9 momento relacionamos la minidimensi\'f3n con la dimensi\'f3n? Esto puede ocurrir en dos momentos. La \
+primera opci\'f3n, es en la tabla de hechos, por ejemplo, las ventas asociadas a dicho cliente. En ese caso tendremos la tabla HechoVentas con \
+una columna para representar el cliente y otra el perfil del cliente en el momento del hecho, como se muestra a continuaci\'f3n.\
+IdCliente IdPerfilCliente \'85 ValorVenta\
+FK FK, NN NN\
+11 1 \'85 500.\
+24 2 \'85 300.\
+Esto permite conocer la versi\'f3n del perfil del cliente que particip\'f3 en la venta para nuestro ejemplo. Adicionalmente, hay ocasiones donde se \
+desea llevar la historia de todos los cambios independiente de los hechos, en este caso de las ventas realizadas por el cliente. Es as\'ed como \
+creamos la tabla HistoriaPerfilCliente y llevamos la historia con el tipo 2, como lo representa la tabla HistoriaPerfilCliente (TablaHecho).\
+HechoVentas (Tabla de hechos)\
+Modelado de datos y ETL\
+9\
+IdCliente IdPerfilCliente FeVigIni FeVigFin Cambio \
+FK FK, NN NN NN\
+11 1 15-01-2007 28-06-2017 1\
+11 2 29-06-2017 01-01-5000 1\
+El tipo 4 es otro de los tipos frecuentemente utilizados en modelos dimensionales.\
+Tipo 5: Basada en la creaci\'f3n de nuevas tablas y nuevas columnas \
+Este tipo 5 es una modificaci\'f3n del tipo 4, donde mantenemos la minidimensi\'f3n y la acompa\'f1amos de una extensi\'f3n que en ingl\'e9s se conoce \
+como outrigger. Esta extensi\'f3n para nuestro ejemplo contiene la versi\'f3n actual de los perfiles de clientes y en la dimensi\'f3n cliente, tenemos \
+un atributo adicional, que contiene el valor de la versi\'f3n actual del perfil. \
+Esta extensi\'f3n en realidad es una vista asociada a la consulta Q1: Select * from PerfilCliente, que contiene las mismas columnas y filas de \
+la minidimensi\'f3n original, en este caso PerfilCliente.\
+HistoriaPerfilCliente (TablaHecho tipo factless)\
+Modelado de datos y ETL\
+10\
+IdMini\
+Categor\'eda\
+RangoIngresos EstadoCivil\
+PK NN NN NN\
+1 Novato 2\'92-5\'92 Casado\
+2 VIP 5\'92-12\'92 Casado\
+3 Novato 2\'92-5\'92 Soltero\
+IdCliente TipoIdentificacion NumIdentificacion Nombre IdMiniPerfilActual\
+PK NN NN NN FK\
+11 TI 124567 Maria Castillo 2\
+24 CC 456789 Juan Perez 3\
+Tipo 6: Basada en la creaci\'f3n de nuevas columnas y nuevas filas\
+El tipo 6 contiene elementos del tipo 3, 2 y 1. Es as\'ed como adicionaremos asociadas al tipo 3, columnas para manejar la versi\'f3n anterior y la \
+actual o las versiones que se quieran de un atributo y adicionalmente, las tres columnas para representar el manejo de tipo 2. Como vemos \
+en la tabla Cliente-tipo6 (Dimensi\'f3n) para el caso de Mar\'eda Castillo, ella tiene dos filas asociadas y en ambas fechas vemos que en las \
+Cliente-tipo5 (Dimensi\'f3n)\
+VPerfilActualCliente (Extensi\'f3n) \
+Modelado de datos y ETL\
+11\
+columnas CategoriaActl e IngresosActl tenemos el mismo valor para las dos filas. Es en este punto donde vemos el tipo 1. En t\'e9rminos \
+generales podemos afirmar que para toda fila asociada a un mismo cliente en sus valoresActuales se tendr\'e1 el mismo valor. De igual manera \
+observamos que en cada versi\'f3n del cliente, siempre tenemos la versi\'f3n de un momento particular y su versi\'f3n actual. Este tipo tampoco es \
+frecuente en los modelos dimensionales.\
+Momento 1:\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'edaHist CategoriaActl IngresosHist IngresosActl EstadoCivil FeVigIni FeVigFin A\
+PK NN NN NN\
+11 TI 124567 Maria Castillo Novato Novato 5\'92 5\'92 Casado 15-01-2007 01-01-5000 S\
+24 CC 456789 Juan Perez Novato Novato 3\'92 3\'92 Soltero 21-10-2020 01-01-5000 S\
+Momento 2:\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'edaHist CategoriaActl IngresosHist IngresosActl EstadoCivil FeVigIni FeVigFin A\
+PK NN NN NN\
+11 TI 124567 MariaCastillo Novato VIP 5\'92 10\'92 Casado 1-01-2007 28-06-2017 N\
+24 CC 456789 Juan Perez Novato Novato 3\'92 3\'92 Soltero 21-10-2020 01-01-5000 S\
+25 TI 124567 MariaCastillo VIP VIP 10\'92 10\'92 Casado 29-06-2017 01-01-5000 S\
+Cliente-tipo6 (Dimensi\'f3n)\
+Modelado de datos y ETL\
+12\
+Tipo 7: Basada en la creaci\'f3n de una nueva \'93dimensi\'f3n\'94 y de nuevas columnas para tener dos versiones de la dimensi\'f3n en el mismo \
+momento\
+Finalmente, tenemos el tipo 7, el cual combina el tipo 2 para el manejo de historia, con la informaci\'f3n de la \'faltima versi\'f3n de la dimensi\'f3n de \
+an\'e1lisis que se almacena en una nueva dimensi\'f3n. \
+La nueva dimensi\'f3n, por ejemplo, VClienteActual, en realidad es una vista asociada a la consulta Q1 Select * from Cliente Where \
+actual=\'92S\'92, que contiene las mismas columnas de la dimensi\'f3n original tipo 2 y como filas solo las versiones actuales.\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'eda(*) Ingresos(*)EstadoCivil(*) FeVigIni FeVigFin A\
+PK NN NN NN NN NN NN\
+25 TI 124567 Maria Castillo VIP 10\'92 Casado 29-06-201701-01-5000 S\
+24 CC 456789 Juan Perez Novato 3\'92 Soltero 02-02-202101-01-5000 S\
+Este tipo podemos verlo en el momento de registrar un hecho, ya que la tabla de hechos tendr\'e1 adicionalmente como columnas, la llave del \
+cliente (dimensi\'f3n involucrada) y la llave del cliente Actual (nueva dimensi\'f3n). Este \'faltimo contiene una llave for\'e1nea a la llave durable, que \
+es una llave subrrogada, propia de la bodega de datos, creada para identificar instancias de una misma dimensi\'f3n, en este caso un cliente. \
+Esta llave garantiza que a pesar de que tenga varias filas en la dimensi\'f3n y que su llave del sistema transaccional haya cambiado este valor se \
+mantiene.\
+Veamos como luce entonces una tabla de hechos que maneja la historia con este tipo 7. Este estilo de representaci\'f3n facilita an\'e1lisis que \
+involucren al mismo tiempo, el valor de la dimensi\'f3n en el momento del hecho, para compararlo con el valor actual en esa dimensi\'f3n.\
+VClienteActual (Dimensi\'f3n) \
+Modelado de datos y ETL\
+13\
+IdCliente DurableIdClienteActual \'85 ValorVenta\
+FK FK, NN NN\
+11 38 \'85 500.\
+24 26 \'85 300.\
+25 38 \'85 600.\
+III. Conclusi\'f3n\
+Al final de esta lectura la invitaci\'f3n es a pensar en las diferentes formas de modelar datos para el manejo adecuado de historia de atributos \
+de una dimensi\'f3n. Con respecto a esta lectura es importante tener claro dos grandes aprendizajes:\
+1. Hay cambios en las dimensiones que pueden ser de inter\'e9s para los an\'e1lisis, as\'ed que hay que determinar la forma de manejarlos.\
+2. La combinaci\'f3n del manejo por medio de columnas cuando se conoce el n\'famero de cambios a guardar y de filas cuando este \
+n\'famero es desconocido es quiz\'e1s una idea valiosa de modelar datos. \
+HechoVentas (Tabla de hechos)\
+Modelado de datos y ETL\
+14\
+3. El poder tener de forma simult\'e1nea la versi\'f3n de la instancia de la dimensi\'f3n (e.g., un cliente espec\'edfico), en el momento del hecho \
+y la versi\'f3n actual facilitar\'e1 los an\'e1lisis. \
+Estos aprendizajes con seguridad podr\'e1s aplicarlos tambi\'e9n, en contextos distintos al ROLAP.\
+\
+Error 6: Inconsistencia entre el nivel de granularidad de la\
+tabla de hechos y los atributos.\
+\'bfQu\'e9 pasa si la reserva realizada incluye varias\
+habitaciones para hospedar el total de personas\
+asociadas a la reserva?\
+Soluci\'f3n 1: Manejar la habitaci\'f3n como un grupo de\
+habitaciones.\
+Explicado en el video de errores de modelos\
+dimensionales.\
+Soluci\'f3n Caso Rhino1\
+\'bfQu\'e9 pasa si la reserva realizada incluye varias\
+habitaciones para hospedar el total de personas\
+asociadas a la reserva?\
+Soluci\'f3n 2:\
+Propuesta: Manejar una relaci\'f3n de 1 a m y adicionar\
+una dimensi\'f3n degenerada.\
+Soluci\'f3n Caso Rhino1\
+\'bfQu\'e9 pasa si la reserva realizada incluye varias\
+habitaciones para hospedar el total de personas\
+asociadas a la reserva? \'bfCada habitaci\'f3n puede ser\
+pagada con diferentes tipos de tarjeta?\
+Propuesta: Manejar una relaci\'f3n de 1 a m y adicionar\
+una dimensi\'f3n degenerada. Veamos el ajuste en el\
+modelo.\
+Soluci\'f3n Caso Rhino1\
+NumReserva(DD)\
+ValorHabitacion\
+FechaCheckIn\
+FechaCheckOut\
+NumReserva\
+(DD)\
+Actual\
+IdPlan\
+IdCliente\
+IdFecha\
+\'bfQu\'e9 pasa si la reserva realizada incluye varias\
+habitaciones para hospedar el total de personas\
+asociadas a la reserva? \'bfCada habitaci\'f3n puede ser\
+pagada con diferentes tipos de tarjeta?\
+Propuesta: Manejar una relaci\'f3n de 1 a m y adicionar\
+una dimensi\'f3n degenerada. Veamos en un ejemplo\
+c\'f3mo quedar\'eda la tabla de hechos..\
+Soluci\'f3n Caso Rhino1\
+FechaCheckIn\
+FechaCheckOut\
+NumReserva\
+(DD)\
+Actual\
+IdPlan\
+IdCliente\
+IdFecha\
+Clien\
+te\uc0\u8203 \
+Fecha\
+CheckIn\
+Fecha\
+CheckOut\
+Sucursal\uc0\u8203  Num\
+Reserva\
+Habitacion\uc0\u8203  \'85 Numero\u8203 \
+Personas\uc0\u8203 \
+Valor\uc0\u8203 \
+Habitacion\
+11\uc0\u8203  20220320\u8203  20220323\u8203  1\u8203  101 1 (TV)\u8203  1\u8203  200.\u8203 \
+11 20220320\uc0\u8203  20220323\u8203  1\u8203  101 2 (Doble)\u8203  2\u8203  150.\u8203 \
+NumReserva\
+(DD)\
+Hotel\
+Cliente\
+Plan\
+Habitacion\
+NumReserva (DD)\
+NumeroPersonas\
+ValorHabitacion\
+TipoTarjeta\
+Este n\'famero de reserva \
+NO representa la llave \
+primaria de la tabla \
+HechoReserva!!!\
+Aunque el nombre puede \
+confundir.\
+Agenda\
+Grupos de atributos y \
+tipos de medidas\
+Dimensiones \
+degeneradas\
+Tipos de \
+medida\
+Tipos de medidas\
+Hotel\
+Cliente\
+Plan\
+Habitacion\
+NumReserva (DD)\
+NumPersonas\
+ValorHabitacion\
+TipoTarjeta\
+FechaCheckIn\
+FechaCheckOut\
+Actual\
+IdPlan\
+IdCliente\
+IdFecha\
+Cliente\uc0\u8203  Fecha\
+CheckIn\
+Fecha\
+CheckOut\
+Sucursal\uc0\u8203  Num\
+Reserva\uc0\u8203 \
+Habitacion \'85\uc0\u8203  Num\
+Personas\uc0\u8203 \
+Valor\uc0\u8203 \
+Habitacion\
+11\uc0\u8203  20220320\u8203  20220323\u8203  \u8203 202 101\u8203  1 (TV)\u8203  1\u8203  200.\u8203 \
+11 20220320\uc0\u8203  20220323\u8203  202\u8203  101\u8203  2 (Doble)\u8203  2\u8203  150.\u8203 \
+\'bfEs posible sumar las medidas en las diferentes \
+dimensiones?\
+Si: Medida aditiva\
+No en ninguna: Medida no aditiva\
+En algunas: Medida semi-aditiva\
+Continuemos con el ejemplo de reservas y analicemos \
+las medidas de HechoReserva.\
+Tipos de medidas \'96 Aditivas\
+Cliente\uc0\u8203  Fecha\
+CheckIn\
+Fecha\
+CheckOut\
+Sucursal\uc0\u8203  Num\
+Reserva\uc0\u8203 \
+Habitacion \'85\uc0\u8203  Num\
+Personas\uc0\u8203 \
+Valor\uc0\u8203 \
+Habitacion\
+11\uc0\u8203  20220320\u8203  20220323\u8203  202 101\u8203  1 (TV)\u8203  1\u8203  200.\u8203 \
+11 20220320\uc0\u8203  20220323\u8203  202\u8203  101\u8203  2 (Doble)\u8203  2\u8203  150.\u8203 \
+\'bfEs posible sumar las medidas en las diferentes dimensiones? \uc0\u61692 Si: Medida aditiva. Aplica al caso de la medida NumPersonas- veamos\
+X No en ninguna: Medida no aditiva\
+X En algunas: Medida semi-aditiva\
+\'bfCu\'e1ntas personas de acuerdo con las reservas van a estar en el fin de semana del 19 de marzo del \
+2022 en la sucursal de Montreal?\
+Select Sum(NumPersonas)\
+From HechoReserva\
+Where Fecha between \'912022/03/19\'92 and \'912022/03/20\'92\
+and Sucursal= \'91202\'92 /*Montreal*/\
+\'bfEsta consulta SQL es correcta?\
+F\'edjate que s\'ed, y mira que se utiliza la suma sobre \
+la medida NumPersonas en las dimensiones Fecha \
+y Sucursal, la cual se puede extender a otras \
+dimensiones y sigue funcionando.\
+Tipos de medidas \'96 No aditivas\
+\'bfEs posible sumar las medidas en las diferentes dimensiones?\
+X Si: Medida aditiva\
+\uc0\u61692 No en ninguna: Medida no aditiva. Aplica al caso de la medida %Dcto. Veamos.\
+X En algunas: Medida semi-aditiva\
+\'bfQu\'e9 porcentaje de descuento en el pago de las habitaciones se aplic\'f3 a las reservas del fin de \
+semana del 19 de marzo del 2022 en la sucursal de Montreal?\
+Select Sum(%Dcto)\
+From HechoReserva\
+Where Fecha between \'912022/03/19\'92 and \'912022/03/20\'92\
+and Sucursal= \'91202\'92 /*Montreal*/\
+Cliente\uc0\u8203  Fecha\u8203 \
+CheckIn\
+Fecha\uc0\u8203 \
+CheckOut\
+Sucursal\uc0\u8203  NumReserva Habitacion \'85\u8203  Numero\u8203 \
+Personas\uc0\u8203 \
+Valor\uc0\u8203 \
+Habitacio\
+n\
+%Dcto\
+11\uc0\u8203  20220320\u8203  20220323\u8203  202 101\u8203  1 (TV)\u8203  1\u8203  200.\u8203  5%\
+11 20220320\uc0\u8203  20220323\u8203  202 101\u8203  2 (Doble)\u8203  2\u8203  150.\u8203  10\u8203 %\
+Esa suma de descuento f\'edjate que no tiene sentido. En el \
+ejemplo hablar\'edamos qu\'e9, aplicamos un 15% de descuento y eso \
+no es as\'ed. Podr\'edamos decir el m\'e1ximo o m\'ednimo descuento \
+aplicado, pero no sumarlos, por eso est\'e1 tachado Sum(%Dcto). \
+Esto aplica a las diferentes dimensiones.\
+Tipos de medidas \'96 Semi-aditivas\
+\'bfEs posible sumar las medidas en las diferentes dimensiones?\
+X Si: Medida aditiva\
+X No en ninguna: Medida no aditiva\
+\uc0\u61692 En algunas: Medida semi-aditiva. Aplica para la medida Ocupada de otro Hecho: HechoOcupaci\'f3n\
+\'bfCu\'e1ntas habitaciones estuvieron ocupadas durante el fin de \
+semana del 19 de marzo del 2022 en la sucursal de Montreal? \
+Nos dar\'eda 3 en el ejemplo y en realidad fueron dos: las \
+habitaciones 1 y 2.\
+Select Sum(Ocupada)\
+From HechoReserva\
+Where Fecha between \'912022/03/19\'92 and \'912022/03/20\'92\
+and Sucursal= \'91202\'92 /*Montreal*/\
+Fecha\uc0\u8203  Sucursal\u8203  Habitacion Ocupada\
+20220319\uc0\u8203  202 1 (TV)\u8203  1\
+20220320\uc0\u8203  202 1 (TV)\u8203  1\
+20220320\uc0\u8203  202 2 (Doble)\u8203  1\
+Pero si hacemos esta consulta:\
+\'bfCu\'e1ntas habitaciones fueron utilizadas durante el 19 de \
+marzo del 2022 en la sucursal de Montreal?\
+Nos dar\'eda 2 en el ejemplo, las habitaciones 1 y la 2\
+y es correcto.\
+Select Sum(Ocupada)\
+From HechoReserva\
+Where Fecha = \'912022/03/19\'92\
+and Sucursal= \'91202\'92 /*Montreal*/\
+HechoOcupaci\'f3n\
+Para una\
+fecha puntual , SI\
+tiene sentido.\
+Pero No para \
+diferentes fechas.\
+Tipo de tabla de hechos \'96 Factless\
+Factless\
+Tabla de hechos sin medidas, dado que el hecho es la misma medida.\
+En esta tabla NO estar\'e1n las habitaciones que estuvieron sin ocupar.\
+Dado que toda tabla de hechos debe tener una medida, se propone adicionar una \
+columna con un valor constante para todas las filas. En el ejemplo:\
+\uc0\u61664  Ocupada=1\
+\
+Diversos conceptos de modelado muldimensional\
+Modelado de datos y ETL 05-2022\
+Mar\'eda del Pilar Villamil \
+Giraldo\
+Modelado de datos y ETL\
+2\
+I. Introducci\'f3n\
+En esta lectura se presenta una serie de conceptos complementarios a los vistos en recursos previos sobre el modelado de datos \
+multidimensional. \
+Se presenta una primera secci\'f3n con varias definiciones complementarias sobre el modelado dimensional y al final una conclusi\'f3n. \
+II. Algunos conceptos \
+Manejo de llaves for\'e1neas: recordemos que en este mundo del modelado multidimensional las consultas a los datos deben ser f\'e1ciles de hacer. \
+Es as\'ed como se recomienda evitar campos sin valor (en NULL), en particular, en aquellos que son llaves for\'e1neas o utilizados regularmente en \
+consultas como es el caso de las fechas. Por esta raz\'f3n se sugiere por un lado crear en las dimensiones susceptibles \
+de tener valores nulos, a nivel de la tabla de hechos, un registro que indique sin valor o valor desconocido. El identificador de ese registro ser\'e1 el \
+que se utilice en el proceso de carga de los datos. Este ser\'eda el ejemplo para el caso de un cliente no identificado en una compra. N\'f3tese como \
+queda referenciado en la tabla de hechos en caso de ser requerido (El color rojo en la tabla de Cliente y en los campos IdCliente y \
+DurableIdClienteActual representan esta situaci\'f3n).\
+Cliente\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'eda(*) Ingresos(*) EstadoCivil(*)\
+PK NN NN NN\
+-1 CC 111111 No identificado SinCategor\'eda SinEstadoCivil\
+11 TI 124567 Maria Castillo VIP 10\'92 Casado\
+24 CC 456789 Juan Perez Novato 5\'92 Soltero\
+HechoVentas\
+Modelado de datos y ETL\
+3\
+IdCliente DurableIdClienteActual \'85 ValorVenta\
+FK FK, NN NN\
+11 38 \'85 500.\
+24 26 \'85 NULL\
+-1 -1 \'85 600.\
+Por otro lado, a nivel de manejo de fechas, es preferible tener un comod\'edn para manejar posibles valores faltantes en dichos campos (e.g.,\'92 01-\
+01-5000\'92). Es as\'ed, como para el manejo de historia de atributos de las dimensiones, se sugiere crear una fecha muy lejana y as\'ed representar que \
+la versi\'f3n de la dimensi\'f3n que se quiere manejar es la vigente, raz\'f3n por la cual su fecha fin de vigencia no se conoce. Esto se puede ver en la \
+siguiente tabla, haciendo referencia a los registros de los clientes 24 y 25, para los cuales las caracter\'edsticas de Categor\'eda, ingresos y estado civil \
+son la versi\'f3n actual conocida a nivel de la bodega de datos. Es en estos registros, donde el valor de FeVigFin tiene el valor del comod\'edn (verlo \
+en color rojo).\
+ClienteManejoTipo2Historia\
+IdCliente TipoIdentificacion NumIdentificacion Nombre Categor\'eda(*) Ingresos(*) EstadoCivil(*) FeVigIni FeVigFin A\
+PK NN NN NN NN NN NN\
+25 TI 124567 Maria Castillo VIP 10\'92 Casado 29-06-2017 01-01-5000 S\
+24 CC 456789 Juan Perez Novato 3\'92 Soltero 02-02-2021 01-01-5000 S\
+Por otro lado, las medidas de las tablas de hecho tambi\'e9n pueden tener valores nulos. En ese caso se recomienda dejar NULL en dichos campos \
+y dejar que sea la funci\'f3n utilizada para agregar los valores la que se encargue del manejo de estos valores. Esto ser\'eda el caso de sumar valor de \
+venta en la tabla HechosVentas. En ese caso el operador SUM(ValorVenta) se encargar\'eda de ese manejo. Este operador, ignora esos valores \
+NULL y suma \'fanicamente las filas con valor, que coincide con el comportamiento que se desea.\
+Modelado de datos y ETL\
+4\
+Dimensi\'f3n degenerada: Corresponden a dimensiones vac\'edas que contienen \'fanicamente un identificador y est\'e1n t\'edpicamente relacionadas con \
+n\'fameros transacciones, referentes a relaciones de encabezados y detalles (1\uc0\u61664 n) en el mundo transaccional. Esto ser\'eda el caso de encabezados \
+de factura y detalles de factura. Esos n\'fameros transaccionales que para el ejemplo ser\'eda el identificador de la factura, permite a nivel del detalle \
+de la misma identificar todos los productos adquiridos bajo una misma factura. Este concepto lo encuentra detallada en la lectura de dimensiones \
+degeneradas y tipos de medidas.\
+Dimensi\'f3n conforme: A nivel de un mismo proceso de negocio, pueden existir diferentes tablas de hecho para representar generalmente, \
+diferentes niveles de granularidad. Por ejemplo, ventas a nivel del detalle de la transacci\'f3n realizada por un cliente, en una fecha, una hora, \
+sucursal y un conjunto de productos, o ventas mensuales por sucursal, donde se agrupan las ventas detalladas y en la cuales las dimensiones de \
+hora y cliente no estar\'edan en el hecho. Es as\'ed como dichas tablas de hecho en caso de compartir las dimensiones, como ser\'eda el caso de sucursal \
+y fecha en nuestro ejemplo, tendr\'edan que referenciar la misma dimensi\'f3n, en nuestro caso representada por la misma tabla, ya sea la de Sucursal \
+o la de Fecha. \
+Veamos ahora otra situaci\'f3n, en la cual no se trata de diferentes tablas de hecho asociadas al mismo proceso de negocio, si no tablas de hecho \
+para diferentes procesos de negocio. Este es el caso de ventas y env\'edos de productos. Estos dos procesos generan sus propios datos y comparten \
+la dimensi\'f3n Cliente. Sin embargo, para el caso de la venta del cliente se tiene un identificador para referenciarlo, mientras que a nivel de env\'edos \
+de producto se tendr\'e1 la direcci\'f3n del cliente. F\'edjense que a pesar de que conceptualmente hablamos de cliente en los dos casos, puede ser tablas \
+distintas y en casos espec\'edficos tener campos distintos. Lo importante en estas situaciones, es que si estas dimensiones comparten atributos \
+estos sean conformes. Lo que quiere decir que deben tener el mismo nombre, la misma representaci\'f3n en nuestro caso a nivel del campo de la \
+base de datos y el mismo contenido para los clientes compartidos. Si son id\'e9nticas conceptualmente, se recomienda copiar la tabla entre los \
+diferentes procesos que la comparten, en caso por ejemplo de estar en repositorios diferentes. Este tipo de dimensiones se conocen tambi\'e9n \
+como dimensiones compartidas, dimensiones maestras o dimensiones comunes.\
+Esquema de copo de nieve (Snowflake)\
+Este concepto aplica a la normalizaci\'f3n de las dimensiones. Es as\'ed como en cambio de tener una dimensi\'f3n por ejemplo de Cliente (ver en la \
+figura A. que se muestra a continuaci\'f3n de la entidad Cliente que dice RECOMENDADO), donde se tiene la descripci\'f3n del tipo de identificaci\'f3n,\
+Modelado de datos y ETL\
+5\
+la categor\'eda del cliente y su estado civil, en la normalizaci\'f3n que se muestra en la figura B, se tendr\'e1n adicional a la tabla de cliente, tablas para \
+tipo de identificaci\'f3n, categor\'eda y estado civil. Esta representaci\'f3n en copo de nieve, aunque es correcta, no se recomienda en estos sistemas ya \
+que implica diferentes joins entre las dimensiones para reconstruir la informaci\'f3n completa del concepto que representa la dimensi\'f3n, en este \
+caso Cliente. Esto es algo contrario a lo manejado en el mundo transaccional, por eso es importante mencionarlo. Los problemas relacionados \
+con esta replicaci\'f3n de datos son responsabilidad de los procesos ETL.\
+A. Esquema desnormalizado (Recomendado) B. Esquema copo de nieve (Normalizado)\
+Modelado de datos y ETL\
+6\
+III. Conclusi\'f3n\
+Estos conceptos son importantes a nivel de manejo de datos. Recuerde que aun si est\'e1 en modelos de datos distintos al relacional, el reflexionar \
+sobre estas situaciones puede ayudarlo a tomar decisiones de forma previa a los problemas que se pueden presentar durante la consulta de los \
+datos, debido a decisiones de modelar y almacenar los datos. Si est\'e1s interesado en complementar la lectura para mejor tu comprensi\'f3n de los \
+modelos multidimensionales, puedes revisar los cap\'edtulos 3,4 y 5 de la referencia [2]\
+\
+Proceso de extracci\'f3n, \
+transformaci\'f3n y carga (ETL) \
+incremental\
+Modelado de datos y \
+ETL\
+05-2022\
+Mar\'eda del Pilar Villamil \
+Giraldo\
+Modelado de datos y ETL\
+2\
+I. Detalle de la lectura\
+Hasta este punto hemos hablado de procesos de ETL iniciales, en los cuales en la bodega o almac\'e9n\
+de datos no hay informaci\'f3n cargada. Sin embargo, esto ocurre muy pocas veces en los procesos de \
+carga, t\'edpicamente cuando se inicia la carga de la bodega o parte de ella. El escenario m\'e1s frecuente \
+est\'e1 relacionado con los procesos incrementales, en los cuales ya se tiene informaci\'f3n en la bodega \
+y donde es necesario adicionar o ajustar los datos existentes. Es as\'ed como una de las caracter\'edsticas \
+del dise\'f1o del modelo de datos debe estar centrado en reducir el n\'famero de actualizaciones de \
+datos, dado que es un proceso costoso en tiempo y recursos, y buscar opciones para que los cambios \
+se conviertan en inserciones de datos.\
+En los tipos de manejo de historia de los atributos de dimensiones vistos previamente, identificamos \
+los tipos 4, 5 y 7 con esta filosof\'eda de reducir actualizaciones en los datos previamente cargados. Sin \
+embargo, el tipo 2, uno de los m\'e1s utilizados, tiene expl\'edcito el hecho de la actualizaci\'f3n, como se \
+muestra en la figura 1, en particular en el paso 2.1.1, donde se realiza la actualizaci\'f3n del registro \
+anterior.\
+Figura 1. Proceso para el manejo tipo 2 de atributos de dimensiones\
+El dise\'f1o de este proceso de ETL, depende tambi\'e9n de la forma como reportan las fuentes de datos. \
+Con respecto a esto, se identifican tres formas diferentes de reportar los datos de una dimensi\'f3n:\
+Modelado de datos y ETL\
+3\
+1. Escenario 1- Env\'edo de la \'faltima versi\'f3n de los registros de las dimensiones: Esta opci\'f3n \
+es la m\'e1s frecuente, si se trata de fuentes de sistemas OLTP, debido a que en pocas \
+ocasiones se permite intervenir dichos sistemas para poder reportar solo los cambios.\
+2. Escenario 2- Env\'edo de la versi\'f3n anterior y la actual de los registros de las dimensiones: \
+Esta opci\'f3n facilita el proceso ETL, si efectivamente se reporta de esta manera en los casos \
+en los cuales se presentaron cambios entre el \'faltimo reporte de datos entregado a la bodega \
+y el nuevo reporte.\
+3. Escenario 3- Env\'edo de todos los cambios de las dimensiones: Esta opci\'f3n si se reportan \
+todos los cambios realizados entre el \'faltimo reporte de datos entregado a la bodega y el \
+nuevo reporte, aporta en el an\'e1lisis hist\'f3rico. Sin embargo, es el menos frecuente, cuando \
+se habla de fuentes de sistemas OLTP.\
+De acuerdo con estos elementos a considerar en procesos ETL es importante pensar en realizar \
+acciones en masa y no por registro. De esta forma, el comienzo del proceso inicia con un cruce de \
+todo el archivo que representa los datos del sistema OLTP con el supuesto del escenario 1 de env\'edo \
+de informaci\'f3n y se compara con lo existente en la bodega de datos para generar una nueva columna \
+que indica:\
+1. Etiqueta 1: Se trata de un registro nuevo (Paso 1.1 en la figura)\
+2. Etiqueta 2: Es un registro que ya existe y cambia (Pasos 2.1.1 y 2.1.2)\
+3. Etiqueta 3: Es un registro que ya existe y no cambia (Paso 2.2)\
+Recordemos que este proceso ocurre en el \'e1rea de staging. Una vez se tiene la nueva columna, ya es \
+posible proceder a actualizar los registros con etiqueta 2 y luego se realizan las inserciones \
+relacionadas con la etiqueta 1.\
+Utilicemos el ejemplo de la dimensi\'f3n Cliente, que se presenta en la figura 2, para ilustrar el proceso \
+descrito previamente:\
+Figura 2. Dimensi\'f3n Cliente\
+Modelado de datos y ETL\
+4\
+Supongamos, que tenemos informaci\'f3n solo de dos clientes y centr\'e9monos en "Mar\'eda Castillo\'94, \
+como se muestra en la siguiente tabla. \
+Archivo reportado del sistema OLTP\
+C\'e9dula nombre ingresos categoria\
+52345845 Maria Castillo 10' VIP\
+79388589 Juan Perez 3' VIP\
+F\'edjense que con respecto a lo que existe en la bodega de datos, que se muestra en la figura 2, los \
+datos de \'93Mar\'eda Castillo\'94 cambian, los ingresos pasan de 5\'92 a 10\'92 y la categor\'eda de Novato a VIP. Es \
+as\'ed como si seguimos el proceso planteado para el manejo de historia tipo 2, nos quedar\'eda una nueva \
+tabla con la siguiente informaci\'f3n en la que se resaltan las nuevas columnas que se requieren y los \
+datos que tendr\'edan:\
+TempCliente\
+C\'e9dula nombre ingresos categoria idCliente Etiqueta\
+52345845 Maria Castillo 10' VIP 11 2\
+79388589 Juan Perez 3' VIP 25 3\
+Cabe resaltar que el idCliente se requiere ya que no manejamos como llave primaria de la dimensi\'f3n, \
+la misma llave del sistema transaccional. Es as\'ed como utilizamos la c\'e9dula, que es el idTransaccional \
+en la bodega, para identificar a los clientes, en particular a \'93Mar\'eda Castillo\'94, comparar su valor de \
+ingresos y categor\'eda, y as\'ed determinar si cambi\'f3 o no.\
+Una vez con estas etiquetas, se procede a insertar todos los registros de la nueva tabla, que tengan \
+etiqueta 1 y 2, con una sentencia como esta:\
+INSERT INTO dimCliente (idCliente, idTransaccional, nombre, \
+ingresos, categor\'eda, fechaInicio, fechaFin, actual) \
+SELECT idClienteGenerado, cedula, nombre, ingresos, categor\'eda, \
+FECHA_CARGA, FECHA_MAX, \'91S\'92\
+FROM TempCliente\
+WHERE etiqueta in (1,2)\
+En la sentencia SQL de inserci\'f3n previamente ilustrada, se evidencia el uso de idClienteGenerado, \
+FECHA_CARGA, FECHA_MAX, \'91S\'92, valores que se generan en la sentencia o se tienen previamente \
+calculados como es el caso de las fechas y la etiqueta, para ser utilizados en la sentencia y completar \
+los campos requeridos en el proceso de carga. Es importante resaltar que este proceso no se hace \
+Modelado de datos y ETL\
+5\
+cliente por cliente, si no de forma masiva, para todos los clientes que tienen el valor de etiqueta 1 o \
+2.\
+Una vez se realiza la inserci\'f3n se procede a hacer la sentencia de actualizaci\'f3n para ajustar los \
+campos fechafin y actual, tambi\'e9n de forma masiva:\
+UPDATE DimCliente C INNER JOIN TempCliente AS TC\
+ ON C.idCliente = TC.idCliente\
+SET C.FechaFin = FECHA_CARGA,\
+C.Actual = \'91N\'92\
+WHERE TC.Etiqueta=2;\
+II. Conclusi\'f3n\
+Al final de esta lectura la invitaci\'f3n es a recordar que estos procesos de carga incremental, en muchas \
+ocasiones afectan registros previamente cargados en la bodega de datos. Es as\'ed que se hace \
+necesario, crear tablas temporales para generar de forma masiva nuevas columnas que van a \
+permitir realizar procesos de inserci\'f3n y actualizaci\'f3n de forma masiva. Estas actualizaciones se \
+concentran en las tablas de dimensi\'f3n, donde si bien en diferentes contextos pueden tener varias \
+filas, no tienen la misma cantidad que las tablas de hecho, en las cuales no se recomienda estos \
+procesos de actualizaci\'f3n}
