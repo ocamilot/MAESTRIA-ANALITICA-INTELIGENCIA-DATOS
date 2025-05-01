@@ -1,0 +1,88 @@
+getwd()
+
+
+##Ej clase 1 Pronosticos
+##1) Datos
+##2)Rendimientos
+#3) Visualizacion
+
+
+##Librerias
+library(quantmod)
+library(tseries)
+library(dplyr)
+library(dygraphs)
+library(xts)
+library(PerformanceAnalytics)
+library(fpp3)
+library(tsfeatures)
+## Parte 1 ) Datos:
+start<- Sys.Date()-(365*5)
+end<- Sys.Date()
+
+precios <-function(sim)
+{
+  ##Obtener precios stocks de Yahoo FInance
+  datos <- getSymbols(sim, from = start, to = end, src = "yahoo", auto.assign = FALSE)
+  ## Elimar faltantes:
+  datos<-na.omit(datos)
+  ##mantener columnas con precios cierre : columnas 4 y 5:
+  datos <- datos[,4]
+  ##Para hacerlo datos accesibles en el global environment:
+  assign(sim, datos, envir = .GlobalEnv)
+}
+
+##Llamamos al activo:
+precios("XOM")
+tail(XOM)
+colnames(XOM)<-"xom"
+##
+str(XOM)
+
+Precios<-  dygraph(XOM, main = "Precios x") %>%
+  dyAxis("y", label = "Precios") %>%
+  dyRangeSelector(dateWindow = c("2020-03-25", "2025-03-25")) %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(5, "Set1")) 
+Precios
+##Rendimientos Simple
+precio_ayer <- lag.xts(XOM,1)
+rs_b<- ((XOM - precio_ayer)/(precio_ayer))[-1,]
+head(rs_b)
+##Con libreria quantmode
+rs_spy2<-periodReturn(XOM, period = "daily", type="arithmetic")
+head(rs_spy2)
+##Rendimiento log:
+rl_spy<- diff(log(XOM))[-1,]
+head(rl_spy)
+##con paqueteria:
+rl_spy2<-periodReturn(XOM, period = "daily", type="log")
+head(rl_spy2)
+
+##Features:
+library(tsfeatures)
+tsfeatures(XOM)
+
+adf.test(XOM)
+db=diff(XOM)%>%na.omit()
+adf.test(db)
+pacf(db, 50)
+
+####  De la Fred:########################
+precios2 <-function(sim)
+{
+  ##Obtener precios stocks de Yahoo FInance
+  datos <- getSymbols.FRED(sim, from=start, to=end, return.class = "xts", auto.assign = FALSE)
+  ## Elimar faltantes:
+  datos<-na.omit(datos)
+  ##mantener columnas con precios cierre y volumenes: columnas 4 y 5:
+  datos <- datos[,1]
+  ##Rend simple:
+  rend<-periodReturn(datos, period="daily",  type='arithmetic')
+  #--------Para hacer dtos accesibles  GLobal ENv:
+  assign(sim, rend, envir = .GlobalEnv)
+  # assign(sim, datos, envir = .GlobalEnv)
+}
+
+##Llamamos al activo:
+precios2("GDP")
+plot(GDP)

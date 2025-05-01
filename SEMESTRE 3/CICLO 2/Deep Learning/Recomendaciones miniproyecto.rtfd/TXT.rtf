@@ -1,0 +1,34 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww27000\viewh13480\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Recomendaciones para el miniproyecto:\
+Del algoritmo de MLP de deep learning (Video de la season sincronica de la semana 3):\
+1. De los hiperparametros y del overfitting del modelo\
+2. Estandarizar los X y tambi\'e9n tal vez los Z (o los As)\
+3. Revisar la funci\'f3n de perdida, irla traficando para ver si en alg\'fan punto se queda estancada: Si es esa, donde veo que ya no baja mas (es decir se aplana como se ve en la grafica), puedo jugar con la tasa de aprendizaje, etc\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Pasted Graphic.png \width6580 \height8420 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+4. Judge con las capas, ponga pocas, muchas y un intermedio y mire como les va. Fije el numero de nodos por capa y juego con la cantidad de capas. EL numero de nodos por capa no influye tanto como el numero de capas \
+{{\NeXTGraphic Pasted Graphic 1.png \width6540 \height11700 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\
+AL FINAL TODO ES ENSAYO Y ERROR\
+\
+Un punto relevante es mirara la funci\'f3n de perdida como va desempe\'f1\'e1ndoselas:\
+1. Ejemplo si voy viendo train y test y en n punto test sube y no sigue bajando a diferencia de train, ese seria un punto para detenerme y decir que ese es el punto optimo:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic 1__#$!@%!#__Pasted Graphic.png \width27860 \height10280 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+2. Otra opci\'f3n es si ve que la funci\'f3n de perdida se demora mucho en bajar, detener el algoritmo y ajustar la tasa de aprendizaje\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic 1__#$!@%!#__Pasted Graphic 1.png \width12700 \height11180 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}}
